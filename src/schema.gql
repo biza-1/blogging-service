@@ -1,0 +1,27 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserType {
+  userId: String!
+  username: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
+type RegisterType {
+  accessToken: String!
+}
+
+type Query {
+  sayHello: String!
+}
+
+type Mutation {
+  """Register a new user"""
+  register(username: String!, password: String!, firstName: String!, lastName: String!, email: String!): UserType!
+
+  """Login a user and receive an access token"""
+  login(username: String!, password: String!): RegisterType!
+}

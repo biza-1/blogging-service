@@ -1,99 +1,102 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Blogging service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Project info
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Project runs on: http://localhost:3000/
+- Swagger runs on: http://localhost:3000/api-docs
+- Apollo Sandbox runs on: http://localhost:3000/graphql
+- Default login is:
+    - username: 'username'
+    - password: 'string'
 
-## Description
+I designed the DB structure with being able to see what the user comment/posted without losing the information when he
+deletes or updates it. <br />
+This is to be able to monitor what the user was doing for safety. <br />
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+I tried to create the app to the best of my ability. Time did not allow me to do everything to perfection.<br />
+I strived to make everything working even if it meant not finishing all to 100% (i.e. not making all graphQL endpoints, but making at least a few).
 
-## Project setup
+### The App features:
+
+- Fully functioning REST API with Swagger
+  - Users can log in and register
+  - It is possible for users to manage their own articles/comments/rating when logged in
+  - Public articles are available to user even if they are not logged in
+
+- Dockerized local DB for development
+    - The DB has to be initialized and seeded manually as per instructions below
+- Dockerized App + DB to run the app with all dependencies
+    - The DB is automatically initialized and seeded with data
+
+- Functioning Apollo Sandbox
+  - with working mutations for register/login
+
+- Unit Test
+  - Example unit tests in modules/auth
+
+- Quality of Life improvements:
+  - Custom decorators for type checking
+  - Validated .env config and simpler usage 
+  - Generated types from Prisma
+  - Custom @module structure to allow for cleaner and simpler usage
+
+## DB diagram
+
+![img_1.png](img_1.png)
+
+## Project setup for local development
 
 ```bash
 $ pnpm install
+
+# setup DB 
+# you need to copy data from .env.example > .env 
+$ docker-compose -f docker-compose.local.yml up
+
+$ pnpm prisma:init
+
+$ pnpm prisma:seed
 ```
 
 ## Compile and run the project
 
 ```bash
 # development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+$ pnpm start:dev
 ```
 
 ## Run tests
 
 ```bash
 # unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+$ pnpm test
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Kill local DB and delete volumes
+Use with Caution!
+Run this when you cannot run the docker-compose for app.
 
 ```bash
-$ pnpm install -g mau
-$ mau deploy
+$ docker-compose -f docker-compose.local.yml down --volumes  
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Run app and DB in docker
 
-## Resources
+Starts the DB, sets it up and seeds it with data. Then starts the blogging service app.
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+$ docker-compose up --build
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## When having trouble running the app and DB in docker
 
-## Support
+Use with caution! It will delete all containers and clean docker cache!
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# when having trouble with remaining DB data
+$ docker-compose down --volumes --rmi all
 
-## Stay in touch
+# when having trouble -- deletes all
+$ docker system prune -a --volumes
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
