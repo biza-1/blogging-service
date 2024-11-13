@@ -1,10 +1,28 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
+import { AppResolver } from './app.resolver';
+import { ConfigModule } from '@nestjs/config';
+import { configNamespaces } from './config';
+import { validate } from './config/validation';
+import { Global, Module } from '@nestjs/common';
+import { ModulesModule } from './modules/modules.module';
+import { WebSocketTestGateway } from './test.gateway';
 
+@Global()
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        ModulesModule,
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            driver: ApolloDriver,
+            autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+            playground: true,
+            introspection: true,
+            csrfPrevention: false,
+            context: ({ req }) => ({ headers: req.headers }),
+        }),
+        ConfigModule.forRoot({ isGlobal: true, load: configNamespaces, validate }),
+    ],
+    providers: [AppResolver, WebSocketTestGateway],
 })
 export class AppModule {}

@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgresdb:
+    container_name: postgres-db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: blogdatabase
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  app:
+    container_name: app
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgresdb
+    environment:
+      DATABASE_URL: "postgresql://postgres:password@postgresdb:5432/blogdatabase?schema=public"
+      RATING_EVENT_NAME: "ratingChanged"
+      COMMENTS_EVENT_NAME: "commentsChanged"
+      JWT_SECRET_KEY: "jwt-secret-key"
+    command: [ "pnpm", "run", "start:prod" ]
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

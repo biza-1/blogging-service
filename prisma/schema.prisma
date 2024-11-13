@@ -1,0 +1,95 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  // binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/postgres/types"
+  classValidation                 = "true"
+  fileNamingStyle                 = "kebab"
+  prettier                        = "true"
+  outputToNestJsResourceStructure = "true"
+  reExport                        = "true"
+}
+
+model UserUser {
+  userId        String   @id @default(uuid()) @map("user_id") @db.Uuid
+  username      String   @unique
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
+  passwordSalt  Bytes    @map("password_salt")
+  passwordHash  Bytes    @map("password_hash")
+  email         String   @unique
+  emailVerified Boolean  @map("email_verified")
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  articles        BlogArticle[]
+  articleRatings  BlogArticleRating[]
+  articleComments BlogArticleComment[]
+}
+
+model BlogArticle {
+  articleId String    @id @default(uuid()) @map("article_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  deletedAt DateTime? @map("deleted_at")
+  isPublic  Boolean   @default(false) @map("is_public")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user     UserUser             @relation(fields: [userId], references: [userId])
+  ratings  BlogArticleRating[]
+  comments BlogArticleComment[]
+  content  BlogArticleContent[]
+}
+
+model BlogArticleContent {
+  articleContentId String   @id @default(uuid()) @map("article_content_id") @db.Uuid
+  articleId        String   @map("article_id") @db.Uuid
+  title            String
+  perex            String
+  text             String
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  article BlogArticle @relation(fields: [articleId], references: [articleId])
+}
+
+model BlogArticleComment {
+  articleCommentId String    @id @default(uuid()) @map("article_comment_id") @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  articleId        String    @map("article_id") @db.Uuid
+  deletedAt        DateTime? @map("deleted_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user    UserUser                    @relation(fields: [userId], references: [userId])
+  article BlogArticle                 @relation(fields: [articleId], references: [articleId])
+  content BlogArticleCommentContent[]
+}
+
+model BlogArticleCommentContent {
+  articleCommentContentId String   @id @default(uuid()) @map("article_comment_content_id") @db.Uuid
+  articleCommentId        String   @map("article_comment_id") @db.Uuid
+  createdAt               DateTime @default(now()) @map("created_at")
+  text                    String
+
+  articleComment BlogArticleComment @relation(fields: [articleCommentId], references: [articleCommentId])
+}
+
+model BlogArticleRating {
+  articleId String   @map("article_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  rating    Int
+  ipAddress String   @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  article BlogArticle @relation(fields: [articleId], references: [articleId])
+  user    UserUser    @relation(fields: [userId], references: [userId])
+
+  @@id([articleId, userId])
+}
