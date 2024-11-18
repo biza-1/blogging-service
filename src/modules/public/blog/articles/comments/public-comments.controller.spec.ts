@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PublicCommentsController } from './public-comments.controller';
 
-xdescribe('PublicCommentsController', () => {
+describe.skip('PublicCommentsController', () => {
     let controller: PublicCommentsController;
 
     beforeEach(async () => {

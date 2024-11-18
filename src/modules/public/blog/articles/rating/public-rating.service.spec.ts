@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PublicRatingService } from './public-rating.service';
 
-xdescribe('PublicRatingService', () => {
+describe.skip('PublicRatingService', () => {
     let service: PublicRatingService;
 
     beforeEach(async () => {

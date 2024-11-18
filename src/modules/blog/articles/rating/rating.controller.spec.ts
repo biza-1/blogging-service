@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RatingController } from './rating.controller';
 
-xdescribe('RatingController', () => {
+describe.skip('RatingController', () => {
     let controller: RatingController;
 
     beforeEach(async () => {
