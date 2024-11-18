@@ -49,6 +49,10 @@ I strived to make everything working even if it meant not finishing all to 100% 
 ```bash
 $ pnpm install
 
+# if you want to develop without DB
+# use this to generate just the PrismaService data
+$ pnpm prisma:gen
+
 # setup DB 
 # you need to copy data from .env.example > .env 
 $ docker-compose -f docker-compose.local.yml up
@@ -68,6 +72,9 @@ $ pnpm start:dev
 ## Run tests
 
 ```bash
+# when tests fail on not existing prisma types  run
+$ pnpm prisma:gen
+
 # unit tests
 $ pnpm test
 ```
