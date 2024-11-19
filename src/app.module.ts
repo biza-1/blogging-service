@@ -7,7 +7,6 @@ import { configNamespaces } from './config';
 import { validate } from './config/validation';
 import { Global, Module } from '@nestjs/common';
 import { ModulesModule } from './modules/modules.module';
-import { WebSocketTestGateway } from './test.gateway';
 
 @Global()
 @Module({
@@ -23,6 +22,6 @@ import { WebSocketTestGateway } from './test.gateway';
         }),
         ConfigModule.forRoot({ isGlobal: true, load: configNamespaces, validate }),
     ],
-    providers: [AppResolver, WebSocketTestGateway],
+    providers: [AppResolver],
 })
 export class AppModule {}
