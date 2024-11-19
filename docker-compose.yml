@@ -25,8 +25,6 @@ services:
       - postgresdb
     environment:
       DATABASE_URL: "postgresql://postgres:password@postgresdb:5432/blogdatabase?schema=public"
-      RATING_EVENT_NAME: "ratingChanged"
-      COMMENTS_EVENT_NAME: "commentsChanged"
       JWT_SECRET_KEY: "jwt-secret-key"
     command: [ "pnpm", "run", "start:prod" ]
     networks:

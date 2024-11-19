@@ -49,10 +49,16 @@ export class CommentsService {
             },
         });
 
-        // emit changes for websocket
-        this.commentsGateway.emitCommentsChange(articleId);
+        const mappedArticleComment = this.mapCommentResponse(articleComment);
 
-        return this.mapCommentResponse(articleComment);
+        // emit changes for websocket
+        this.commentsGateway.emitCommentCreated(
+            articleId,
+            articleComment.articleCommentId,
+            mappedArticleComment,
+        );
+
+        return mappedArticleComment;
     }
 
     async findAll(userId: string, articleId: string): Promise<BlogArticleCommentResponseDto[]> {
@@ -168,10 +174,16 @@ export class CommentsService {
             },
         });
 
-        // emit changes for websocket
-        this.commentsGateway.emitCommentsChange(articleId);
+        const updatedArticleComment = await this.findOne(userId, articleId, articleCommentId);
 
-        return this.findOne(userId, articleId, articleCommentId);
+        // emit changes for websocket
+        this.commentsGateway.emitCommentUpdated(
+            articleId,
+            updatedArticleComment.articleCommentId,
+            updatedArticleComment,
+        );
+
+        return updatedArticleComment;
     }
 
     async softDelete(userId: string, articleId: string, articleCommentId: string): Promise<boolean> {
@@ -188,7 +200,7 @@ export class CommentsService {
         });
 
         // emit changes for websocket
-        this.commentsGateway.emitCommentsChange(articleId);
+        this.commentsGateway.emitCommentDeleted(articleId, articleCommentId);
 
         return true;
     }
