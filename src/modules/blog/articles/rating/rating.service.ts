@@ -40,7 +40,7 @@ export class RatingService {
         });
 
         // emit changes for websocket
-        this.ratingGateway.emitRatingChange(articleId);
+        await this.emitRatingChange(articleId);
 
         return articleRating;
     }
@@ -54,6 +54,27 @@ export class RatingService {
                 rating: true,
             },
         });
+    }
+
+    private async emitRatingChange(articleId: string) {
+        const totalRating = await this.prisma.blogArticleRating.aggregate({
+            where: {
+                articleId,
+                article: {
+                    isPublic: true,
+                    deletedAt: {
+                        equals: null,
+                    },
+                },
+            },
+            _sum: {
+                rating: true,
+            },
+        });
+
+        const newRating = totalRating?._sum?.rating ?? 0;
+
+        this.ratingGateway.emitRatingChange(articleId, newRating);
     }
 
     // async update(
@@ -87,7 +108,7 @@ export class RatingService {
             });
 
             // emit changes for websocket
-            this.ratingGateway.emitRatingChange(articleId);
+            await this.emitRatingChange(articleId);
 
             return true;
         } catch (error) {

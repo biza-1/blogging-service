@@ -6,13 +6,6 @@ export class Environment {
     @IsString()
     DATABASE_URL: string;
 
-    // Websocket
-    @IsString()
-    RATING_EVENT_NAME: string;
-
-    @IsString()
-    COMMENTS_EVENT_NAME: string;
-
     // Auth
     @IsString()
     JWT_SECRET_KEY: string;
