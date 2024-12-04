@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { LOG_CONTEXT } from '../src/constants/log';
 
 const prisma = new PrismaClient();
 
@@ -18,7 +19,7 @@ async function main() {
         },
     });
 
-    console.log('Created user: ', user);
+    console.log(LOG_CONTEXT.PRISMA_SEED, 'Created user: ', user);
 
     // Create a blog article
     const article = await prisma.blogArticle.create({
@@ -39,7 +40,7 @@ async function main() {
         },
     });
 
-    console.log('Created article: ', article);
+    console.log(LOG_CONTEXT.PRISMA_SEED, 'Created article: ', article);
 
     // Add a comment to the article
     const comment = await prisma.blogArticleComment.create({
@@ -58,7 +59,7 @@ async function main() {
         },
     });
 
-    console.log('Created comment: ', comment);
+    console.log(LOG_CONTEXT.PRISMA_SEED, 'Created comment: ', comment);
 
     // Rate the article
     const rating = await prisma.blogArticleRating.create({
@@ -72,12 +73,12 @@ async function main() {
         },
     });
 
-    console.log('Created rating: ', rating);
+    console.log(LOG_CONTEXT.PRISMA_SEED, 'Created rating: ', rating);
 }
 
 main()
     .catch(e => {
-        console.error(e);
+        console.error(LOG_CONTEXT.PRISMA_SEED ,e);
     })
     .finally(async () => {
         await prisma.$disconnect();

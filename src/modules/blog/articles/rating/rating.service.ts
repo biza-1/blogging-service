@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../providers/prisma/prisma.service';
 import { ArticleRatingResponseDto, BlogArticleRatingBodyDto } from './dto/common-rating.dto';
 import { RatingGateway } from './rating.gateway';
+import { LOG_CONTEXT } from '../../../../constants/log';
 
 @Injectable()
 export class RatingService {
@@ -112,7 +113,7 @@ export class RatingService {
 
             return true;
         } catch (error) {
-            console.error('Error deleting rating:', error);
+            console.error(LOG_CONTEXT.RATING_CONTROLLER, 'Error deleting rating:', error);
 
             return false;
         }

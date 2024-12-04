@@ -23,6 +23,7 @@ import {
     BlogArticleCommentIdParamsDto,
     BlogArticleCommentResponseDto,
 } from './dto/common-comments.dto';
+import { LOG_CONTEXT } from '../../../../constants/log';
 
 @Controller('/')
 @ApiTags('blog/articles/comments')
@@ -119,7 +120,7 @@ export class CommentsController {
 
             return articleComment;
         } catch (e) {
-            console.log('error updating article comment', e);
+            console.log(LOG_CONTEXT.COMMENTS_CONTROLLER, 'Error updating article comment', e);
 
             throw new HttpException('Article comment not found', HttpStatus.NOT_FOUND);
         }

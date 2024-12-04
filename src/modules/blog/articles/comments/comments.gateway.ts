@@ -3,6 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { WEBSOCKET_EVENT_NAME, WEBSOCKET_NAMESPACE } from '../../../../constants/websocket';
 import { OnModuleInit } from '@nestjs/common';
 import { BlogArticleCommentResponseDto } from './dto/common-comments.dto';
+import { LOG_CONTEXT } from '../../../../constants/log';
 
 @WebSocketGateway({ namespace: WEBSOCKET_NAMESPACE.ARTICLE_COMMENTS })
 export class CommentsGateway implements OnModuleInit {
@@ -16,30 +17,36 @@ export class CommentsGateway implements OnModuleInit {
 
     onModuleInit() {
         this.server.on(WEBSOCKET_EVENT_NAME.CONNECTION, (socket: Socket) => {
-            console.log(`[CommentsGateway] Client connected: ${socket.id}`);
+            console.log(LOG_CONTEXT.COMMENTS_GATEWAY, `Client connected: ${socket.id}`);
 
             socket.on(WEBSOCKET_EVENT_NAME.JOIN_ARTICLE, (articleId: string) => {
                 if (!this.isValidArticleId(articleId)) {
-                    console.log(`[CommentsGateway] Client ${socket.id} sent incorrect data: ${articleId}`);
+                    console.log(
+                        LOG_CONTEXT.COMMENTS_GATEWAY,
+                        `Client ${socket.id} sent incorrect data: ${articleId}`,
+                    );
                     return;
                 }
 
-                console.log(`[CommentsGateway] Client ${socket.id} joined article ${articleId}`);
+                console.log(LOG_CONTEXT.COMMENTS_GATEWAY, `Client ${socket.id} joined article ${articleId}`);
                 socket.join(articleId);
             });
 
             socket.on(WEBSOCKET_EVENT_NAME.LEAVE_ARTICLE, (articleId: string) => {
                 if (!this.isValidArticleId(articleId)) {
-                    console.log(`[CommentsGateway] Client ${socket.id} sent incorrect data: ${articleId}`);
+                    console.log(
+                        LOG_CONTEXT.COMMENTS_GATEWAY,
+                        `Client ${socket.id} sent incorrect data: ${articleId}`,
+                    );
                     return;
                 }
 
-                console.log(`[CommentsGateway] Client ${socket.id} left article ${articleId}`);
+                console.log(LOG_CONTEXT.COMMENTS_GATEWAY, `Client ${socket.id} left article ${articleId}`);
                 socket.leave(articleId);
             });
 
             socket.on(WEBSOCKET_EVENT_NAME.DISCONNECT, () => {
-                console.log(`[CommentsGateway] Client disconnected: ${socket.id}`);
+                console.log(LOG_CONTEXT.COMMENTS_GATEWAY, `Client disconnected: ${socket.id}`);
             });
         });
     }
@@ -50,7 +57,10 @@ export class CommentsGateway implements OnModuleInit {
             .to(articleId)
             .emit(WEBSOCKET_EVENT_NAME.ARTICLE_COMMENT_CREATED, { articleId, commentId, comment });
 
-        console.log(`[CommentsGateway] Emitted new comment for article ${articleId}: ${commentId}`);
+        console.log(
+            LOG_CONTEXT.COMMENTS_GATEWAY,
+            `Emitted new comment for article ${articleId}: ${commentId}`,
+        );
     }
 
     // Emit an event for an updated comment.
@@ -59,7 +69,10 @@ export class CommentsGateway implements OnModuleInit {
             .to(articleId)
             .emit(WEBSOCKET_EVENT_NAME.ARTICLE_COMMENT_UPDATED, { articleId, commentId, updatedComment });
 
-        console.log(`[CommentsGateway] Emitted updated comment for article ${articleId}: ${commentId}`);
+        console.log(
+            LOG_CONTEXT.COMMENTS_GATEWAY,
+            `Emitted updated comment for article ${articleId}: ${commentId}`,
+        );
     }
 
     // Emit an event for a deleted comment.
@@ -68,7 +81,10 @@ export class CommentsGateway implements OnModuleInit {
             .to(articleId)
             .emit(WEBSOCKET_EVENT_NAME.ARTICLE_COMMENT_DELETED, { articleId, commentId });
 
-        console.log(`[CommentsGateway] Emitted deleted comment for article ${articleId}: ${commentId}`);
+        console.log(
+            LOG_CONTEXT.COMMENTS_GATEWAY,
+            `Emitted deleted comment for article ${articleId}: ${commentId}`,
+        );
     }
 
     private isValidArticleId(articleId: string): boolean {

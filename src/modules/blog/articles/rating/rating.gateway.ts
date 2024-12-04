@@ -2,6 +2,7 @@ import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WEBSOCKET_EVENT_NAME, WEBSOCKET_NAMESPACE } from '../../../../constants/websocket';
 import { OnModuleInit } from '@nestjs/common';
+import { LOG_CONTEXT } from '../../../../constants/log';
 
 @WebSocketGateway({ namespace: WEBSOCKET_NAMESPACE.ARTICLE_RATING })
 export class RatingGateway implements OnModuleInit {
@@ -15,34 +16,40 @@ export class RatingGateway implements OnModuleInit {
 
     onModuleInit() {
         this.server.on(WEBSOCKET_EVENT_NAME.CONNECTION, (socket: Socket) => {
-            console.log(`[RatingGateway] Client connected: ${socket.id}`);
+            console.log(LOG_CONTEXT.RATING_GATEWAY, `Client connected: ${socket.id}`);
 
             socket.on(WEBSOCKET_EVENT_NAME.JOIN_ARTICLE, (articleId: string) => {
                 if (!this.isValidArticleId(articleId)) {
-                    console.log(`[RatingGateway] Client ${socket.id} sent incorrect data: ${articleId}`);
+                    console.log(
+                        LOG_CONTEXT.RATING_GATEWAY,
+                        `Client ${socket.id} sent incorrect data: ${articleId}`,
+                    );
 
                     return;
                 }
 
-                console.log(`[RatingGateway] Client ${socket.id} joined article ${articleId}`);
+                console.log(LOG_CONTEXT.RATING_GATEWAY, `Client ${socket.id} joined article ${articleId}`);
 
                 socket.join(articleId);
             });
 
             socket.on(WEBSOCKET_EVENT_NAME.LEAVE_ARTICLE, (articleId: string) => {
                 if (!this.isValidArticleId(articleId)) {
-                    console.log(`[RatingGateway] Client ${socket.id} sent incorrect data: ${articleId}`);
+                    console.log(
+                        LOG_CONTEXT.RATING_GATEWAY,
+                        `Client ${socket.id} sent incorrect data: ${articleId}`,
+                    );
 
                     return;
                 }
 
-                console.log(`[RatingGateway] Client ${socket.id} left article ${articleId}`);
+                console.log(LOG_CONTEXT.RATING_GATEWAY, `Client ${socket.id} left article ${articleId}`);
 
                 socket.leave(articleId);
             });
 
             socket.on(WEBSOCKET_EVENT_NAME.DISCONNECT, () => {
-                console.log(`[RatingGateway] Client disconnected: ${socket.id}`);
+                console.log(LOG_CONTEXT.RATING_GATEWAY, `Client disconnected: ${socket.id}`);
             });
         });
     }
@@ -53,7 +60,10 @@ export class RatingGateway implements OnModuleInit {
         const currentRating = this.articleRatings.get(articleId);
 
         if (currentRating === newRating) {
-            console.log(`Article ${articleId} did not change rating: ${newRating}`);
+            console.log(
+                LOG_CONTEXT.RATING_GATEWAY,
+                `Article ${articleId} did not change rating: ${newRating}`,
+            );
 
             return;
         }
@@ -64,7 +74,7 @@ export class RatingGateway implements OnModuleInit {
             .to(articleId)
             .emit(WEBSOCKET_EVENT_NAME.ARTICLE_RATING_UPDATED, { articleId, rating: newRating });
 
-        console.log(`[RatingGateway] Emitted new rating for article ${articleId}: ${newRating}`);
+        console.log(LOG_CONTEXT.RATING_GATEWAY, `Emitted new rating for article ${articleId}: ${newRating}`);
     }
 
     private isValidArticleId(articleId: string): boolean {

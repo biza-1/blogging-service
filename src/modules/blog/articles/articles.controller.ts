@@ -23,6 +23,7 @@ import {
     BlogArticleIdParamsDto,
     BlogArticleResponseDto,
 } from './dto/common-articles.dto';
+import { LOG_CONTEXT } from '../../../constants/log';
 
 @Controller('/')
 @ApiTags('blog/articles')
@@ -102,7 +103,7 @@ export class ArticlesController {
 
             return article;
         } catch (e) {
-            console.log('error updating article', e);
+            console.log(LOG_CONTEXT.ARTICLES_CONTROLLER, 'Error updating article', e);
 
             throw new HttpException('Article not found', HttpStatus.NOT_FOUND);
         }

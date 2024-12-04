@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterUserBodyDto, RegisterUserResponseDto } from './dto/register.dto';
 import { LoginUserBodyDto, LoginUserResultDto } from './dto/login.dto';
+import { LOG_CONTEXT } from '../../constants/log';
 
 @Controller('/')
 @ApiTags('auth')
@@ -21,7 +22,7 @@ export class AuthController {
                 body.email,
             );
         } catch (error) {
-            console.log(error);
+            console.log(LOG_CONTEXT.AUTH_CONTROLLER, error);
 
             throw new HttpException('Registration failed', HttpStatus.BAD_REQUEST);
         }
@@ -38,7 +39,7 @@ export class AuthController {
 
             return await this.authService.login(user);
         } catch (error) {
-            console.log(error);
+            console.log(LOG_CONTEXT.AUTH_CONTROLLER, error);
 
             throw new HttpException('Login failed', HttpStatus.UNAUTHORIZED);
         }
