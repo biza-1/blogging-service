@@ -35,12 +35,12 @@ export class ArticlesController {
     @Post()
     @ApiOperation({ summary: 'Create a new blog article' })
     async create(
-        @Body() createBlogArticleDto: CreateBlogArticleBodyDto,
+        @Body() body: CreateBlogArticleBodyDto,
         @Request() req: JwtPayloadRequestDto,
     ): Promise<BlogArticleResponseDto> {
         const userId = extractUserIdFromRequest(req);
 
-        return this.articlesService.create(userId, createBlogArticleDto);
+        return this.articlesService.create(userId, body);
     }
 
     @Get()
