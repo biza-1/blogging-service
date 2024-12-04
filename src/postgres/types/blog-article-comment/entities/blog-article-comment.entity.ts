@@ -11,12 +11,12 @@ export class BlogArticleComment {
         type: `string`,
         format: `date-time`,
     })
-    deletedAt: Date | null;
+    createdAt: Date;
     @ApiProperty({
         type: `string`,
         format: `date-time`,
     })
-    createdAt: Date;
+    deletedAt: Date | null;
     user?: UserUser;
     article?: BlogArticle;
     content?: BlogArticleCommentContent[];

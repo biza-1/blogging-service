@@ -1,37 +1,37 @@
 version: '3.8'
 
 services:
-  postgresdb:
-    container_name: postgres-db
+  blog-db-postgres:
+    container_name: blog-db-postgres
     image: postgres:latest
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: blogdatabase
+      POSTGRES_DB: blog_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_blog_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
       - app-network
 
-  app:
-    container_name: app
+  blog-api:
+    container_name: blog-api
     build: .
     ports:
       - "3000:3000"
     depends_on:
-      - postgresdb
+      - blog-db-postgres
     environment:
-      DATABASE_URL: "postgresql://postgres:password@postgresdb:5432/blogdatabase?schema=public"
+      DATABASE_URL: "postgresql://postgres:password@blog-db-postgres:5432/blog_db?schema=public"
       JWT_SECRET_KEY: "jwt-secret-key"
     command: [ "pnpm", "run", "start:prod" ]
     networks:
       - app-network
 
 volumes:
-  postgres_data:
+  postgres_blog_data:
     driver: local
 
 networks:

@@ -42,7 +42,7 @@ I strived to make everything working even if it meant not finishing all to 100% 
 
 ## DB diagram
 
-![img_1.png](img_1.png)
+![db-diagram.svg](assets/images/db-diagram.svg)
 
 ## Project setup for local development
 
@@ -67,6 +67,16 @@ $ pnpm prisma:seed
 ```bash
 # development
 $ pnpm start:dev
+```
+
+## Work with updated DB types
+When there are changes made in the prisma/schema.prisma you should:
+``` bash
+# regenerate types
+$ pnpm prisma:gen
+
+# types are generated into src/posgres/generated-types which is git ignored folder
+# you have to copy the needed types into src/posgres/types
 ```
 
 ## Run tests

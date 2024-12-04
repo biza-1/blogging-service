@@ -1,23 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserUser } from '../../user-user/entities/user-user.entity';
-import { BlogArticleRating } from '../../blog-article-rating/entities/blog-article-rating.entity';
-import { BlogArticleComment } from '../../blog-article-comment/entities/blog-article-comment.entity';
-import { BlogArticleContent } from '../../blog-article-content/entities/blog-article-content.entity';
+import { UserUser } from '../../user-user/entities';
+import { BlogArticleRating } from '../../blog-article-rating/entities';
+import { BlogArticleComment } from '../../blog-article-comment/entities';
+import { BlogArticleContent } from '../../blog-article-content/entities';
 
 export class BlogArticle {
     articleId: string;
     userId: string;
-    @ApiProperty({
-        type: `string`,
-        format: `date-time`,
-    })
-    deletedAt: Date | null;
     isPublic: boolean;
     @ApiProperty({
         type: `string`,
         format: `date-time`,
     })
     createdAt: Date;
+    @ApiProperty({
+        type: `string`,
+        format: `date-time`,
+    })
+    deletedAt: Date | null;
     user?: UserUser;
     ratings?: BlogArticleRating[];
     comments?: BlogArticleComment[];

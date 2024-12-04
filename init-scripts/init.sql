@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "UserUser"
+CREATE TABLE "user.user"
 (
     "user_id"        UUID         NOT NULL,
     "username"       TEXT         NOT NULL,
@@ -12,11 +12,11 @@ CREATE TABLE "UserUser"
     "active"         BOOLEAN      NOT NULL DEFAULT true,
     "created_at"     TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "UserUser_pkey" PRIMARY KEY ("user_id")
+    CONSTRAINT "user_user_pkey" PRIMARY KEY ("user_id")
 );
 
 -- CreateTable
-CREATE TABLE "BlogArticle"
+CREATE TABLE "blog.article"
 (
     "article_id" UUID         NOT NULL,
     "user_id"    UUID         NOT NULL,
@@ -24,11 +24,11 @@ CREATE TABLE "BlogArticle"
     "is_public"  BOOLEAN      NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "BlogArticle_pkey" PRIMARY KEY ("article_id")
+    CONSTRAINT "blog_article_pkey" PRIMARY KEY ("article_id")
 );
 
 -- CreateTable
-CREATE TABLE "BlogArticleContent"
+CREATE TABLE "blog.article_content"
 (
     "article_content_id" UUID         NOT NULL,
     "article_id"         UUID         NOT NULL,
@@ -37,11 +37,11 @@ CREATE TABLE "BlogArticleContent"
     "text"               TEXT         NOT NULL,
     "created_at"         TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "BlogArticleContent_pkey" PRIMARY KEY ("article_content_id")
+    CONSTRAINT "blog_article_content_pkey" PRIMARY KEY ("article_content_id")
 );
 
 -- CreateTable
-CREATE TABLE "BlogArticleComment"
+CREATE TABLE "blog.article_comment"
 (
     "article_comment_id" UUID         NOT NULL,
     "user_id"            UUID         NOT NULL,
@@ -49,22 +49,22 @@ CREATE TABLE "BlogArticleComment"
     "deleted_at"         TIMESTAMP(3),
     "created_at"         TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "BlogArticleComment_pkey" PRIMARY KEY ("article_comment_id")
+    CONSTRAINT "blog_article_comment_pkey" PRIMARY KEY ("article_comment_id")
 );
 
 -- CreateTable
-CREATE TABLE "BlogArticleCommentContent"
+CREATE TABLE "blog.article_comment_content"
 (
     "article_comment_content_id" UUID         NOT NULL,
     "article_comment_id"         UUID         NOT NULL,
     "created_at"                 TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "text"                       TEXT         NOT NULL,
 
-    CONSTRAINT "BlogArticleCommentContent_pkey" PRIMARY KEY ("article_comment_content_id")
+    CONSTRAINT "blog_article_comment_content_pkey" PRIMARY KEY ("article_comment_content_id")
 );
 
 -- CreateTable
-CREATE TABLE "BlogArticleRating"
+CREATE TABLE "blog.article_rating"
 (
     "article_id" UUID         NOT NULL,
     "user_id"    UUID         NOT NULL,
@@ -73,48 +73,46 @@ CREATE TABLE "BlogArticleRating"
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "BlogArticleRating_pkey" PRIMARY KEY ("article_id", "user_id")
+    CONSTRAINT "blog_article_rating_pkey" PRIMARY KEY ("article_id", "user_id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserUser_username_key" ON "UserUser" ("username");
+CREATE UNIQUE INDEX "user_user_username_key" ON "user.user" ("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserUser_email_key" ON "UserUser" ("email");
+CREATE UNIQUE INDEX "user_user_email_key" ON "user.user" ("email");
 
 -- AddForeignKey
-ALTER TABLE "BlogArticle"
-    ADD CONSTRAINT "BlogArticle_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "UserUser" ("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "blog.article"
+    ADD CONSTRAINT "blog_article_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user.user" ("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BlogArticleContent"
-    ADD CONSTRAINT "BlogArticleContent_article_id_fkey" FOREIGN KEY ("article_id") REFERENCES "BlogArticle" ("article_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "blog.article_content"
+    ADD CONSTRAINT "blog_article_content_article_id_fkey" FOREIGN KEY ("article_id") REFERENCES "blog.article" ("article_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BlogArticleComment"
-    ADD CONSTRAINT "BlogArticleComment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "UserUser" ("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "blog.article_comment"
+    ADD CONSTRAINT "blog_article_comment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user.user" ("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BlogArticleComment"
-    ADD CONSTRAINT "BlogArticleComment_article_id_fkey" FOREIGN KEY ("article_id") REFERENCES "BlogArticle" ("article_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "blog.article_comment"
+    ADD CONSTRAINT "blog_article_comment_article_id_fkey" FOREIGN KEY ("article_id") REFERENCES "blog.article" ("article_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BlogArticleCommentContent"
-    ADD CONSTRAINT "BlogArticleCommentContent_article_comment_id_fkey" FOREIGN KEY ("article_comment_id") REFERENCES "BlogArticleComment" ("article_comment_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "blog.article_comment_content"
+    ADD CONSTRAINT "blog_article_comment_content_article_comment_id_fkey" FOREIGN KEY ("article_comment_id") REFERENCES "blog.article_comment" ("article_comment_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BlogArticleRating"
-    ADD CONSTRAINT "BlogArticleRating_article_id_fkey" FOREIGN KEY ("article_id") REFERENCES "BlogArticle" ("article_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "blog.article_rating"
+    ADD CONSTRAINT "blog_article_rating_article_id_fkey" FOREIGN KEY ("article_id") REFERENCES "blog.article" ("article_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BlogArticleRating"
-    ADD CONSTRAINT "BlogArticleRating_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "UserUser" ("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "blog.article_rating"
+    ADD CONSTRAINT "blog_article_rating_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user.user" ("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
-
--- seed DB
-
-INSERT INTO "UserUser" (user_id, username, first_name, last_name, password_salt, password_hash, email, email_verified,
-                        active, created_at)
+-- Seed Data
+INSERT INTO "user.user" (user_id, username, first_name, last_name, password_salt, password_hash, email, email_verified,
+                         active, created_at)
 VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'username',
         'John',
@@ -126,15 +124,13 @@ VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         TRUE,
         NOW());
 
-
-INSERT INTO "BlogArticle" (article_id, user_id, is_public, created_at)
+INSERT INTO "blog.article" (article_id, user_id, is_public, created_at)
 VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         TRUE,
         NOW());
 
-
-INSERT INTO "BlogArticleContent" (article_content_id, article_id, title, perex, text, created_at)
+INSERT INTO "blog.article_content" (article_content_id, article_id, title, perex, text, created_at)
 VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'My First Article',
@@ -142,22 +138,19 @@ VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'This is the main content of my first article.',
         NOW());
 
-
-INSERT INTO "BlogArticleComment" (article_comment_id, user_id, article_id, created_at)
+INSERT INTO "blog.article_comment" (article_comment_id, user_id, article_id, created_at)
 VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         NOW());
 
-
-INSERT INTO "BlogArticleCommentContent" (article_comment_content_id, article_comment_id, text, created_at)
+INSERT INTO "blog.article_comment_content" (article_comment_content_id, article_comment_id, text, created_at)
 VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'Great article!',
         NOW());
 
-
-INSERT INTO "BlogArticleRating" (article_id, user_id, rating, ip_address, created_at, updated_at)
+INSERT INTO "blog.article_rating" (article_id, user_id, rating, ip_address, created_at, updated_at)
 VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         1,

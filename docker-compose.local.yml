@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  db:
-    container_name: postgres-local
+  blog-db-local-postgres:
+    container_name: blog-db-local-postgres
     image: postgres:latest
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: blogdb_local  # Change database name for local environment
+      POSTGRES_DB: blog_db_local  # Change database name for local environment
     volumes:
-      - postgres_local_data:/var/lib/postgresql/data
+      - postgres_blog_local_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_local_data:
+  postgres_blog_local_data:
     driver: local

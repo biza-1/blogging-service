@@ -10,7 +10,7 @@ generator client {
 
 generator nestjsDto {
   provider                        = "prisma-generator-nestjs-dto"
-  output                          = "../src/postgres/types"
+  output                          = "../src/postgres/generated-types"
   classValidation                 = "true"
   fileNamingStyle                 = "kebab"
   prettier                        = "true"
@@ -33,19 +33,23 @@ model UserUser {
   articles        BlogArticle[]
   articleRatings  BlogArticleRating[]
   articleComments BlogArticleComment[]
+
+  @@map("user.user")
 }
 
 model BlogArticle {
   articleId String    @id @default(uuid()) @map("article_id") @db.Uuid
   userId    String    @map("user_id") @db.Uuid
-  deletedAt DateTime? @map("deleted_at")
   isPublic  Boolean   @default(false) @map("is_public")
   createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
 
   user     UserUser             @relation(fields: [userId], references: [userId])
   ratings  BlogArticleRating[]
   comments BlogArticleComment[]
   content  BlogArticleContent[]
+
+  @@map("blog.article")
 }
 
 model BlogArticleContent {
@@ -57,27 +61,33 @@ model BlogArticleContent {
   createdAt        DateTime @default(now()) @map("created_at")
 
   article BlogArticle @relation(fields: [articleId], references: [articleId])
+
+  @@map("blog.article_content")
 }
 
 model BlogArticleComment {
   articleCommentId String    @id @default(uuid()) @map("article_comment_id") @db.Uuid
   userId           String    @map("user_id") @db.Uuid
   articleId        String    @map("article_id") @db.Uuid
-  deletedAt        DateTime? @map("deleted_at")
   createdAt        DateTime  @default(now()) @map("created_at")
+  deletedAt        DateTime? @map("deleted_at")
 
   user    UserUser                    @relation(fields: [userId], references: [userId])
   article BlogArticle                 @relation(fields: [articleId], references: [articleId])
   content BlogArticleCommentContent[]
+
+  @@map("blog.article_comment")
 }
 
 model BlogArticleCommentContent {
   articleCommentContentId String   @id @default(uuid()) @map("article_comment_content_id") @db.Uuid
   articleCommentId        String   @map("article_comment_id") @db.Uuid
-  createdAt               DateTime @default(now()) @map("created_at")
   text                    String
+  createdAt               DateTime @default(now()) @map("created_at")
 
   articleComment BlogArticleComment @relation(fields: [articleCommentId], references: [articleCommentId])
+
+  @@map("blog.article_comment_content")
 }
 
 model BlogArticleRating {
@@ -92,4 +102,5 @@ model BlogArticleRating {
   user    UserUser    @relation(fields: [userId], references: [userId])
 
   @@id([articleId, userId])
+  @@map("blog.article_rating")
 }
