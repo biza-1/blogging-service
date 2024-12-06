@@ -1,4 +1,4 @@
-import { Module } from '../helpers/decorators/module';
+import { Module } from '../common/decorators/module';
 import { AuthModule } from './auth/auth.module';
 import { BlogModule } from './blog/blog.module';
 import { PublicBlogModule } from './public/blog/public-blog.module';

@@ -1,9 +1,8 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { WEBSOCKET_EVENT_NAME, WEBSOCKET_NAMESPACE } from '../../../../constants/websocket';
+import { LOG_CONTEXT, WEBSOCKET_EVENT_NAME, WEBSOCKET_NAMESPACE } from '../../../../common/constants';
 import { OnModuleInit } from '@nestjs/common';
 import { BlogArticleCommentResponseDto } from './dto/common-comments.dto';
-import { LOG_CONTEXT } from '../../../../constants/log';
 
 @WebSocketGateway({ namespace: WEBSOCKET_NAMESPACE.ARTICLE_COMMENTS })
 export class CommentsGateway implements OnModuleInit {

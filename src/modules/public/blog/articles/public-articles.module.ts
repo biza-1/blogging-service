@@ -1,9 +1,9 @@
-import { Module } from '../../../../helpers/decorators/module';
+import { Module } from '../../../../common/decorators/module';
 import { PublicArticlesService } from './public-articles.service';
 import { PublicArticlesController } from './public-articles.controller';
 import { PublicRatingModule } from './rating/public-rating.module';
 import { PublicCommentsModule } from './comments/public-comments.module';
-import { PrismaService } from '../../../../providers/prisma/prisma.service';
+import { PrismaService } from '../../../../common/providers';
 
 @Module({
     metadata: {

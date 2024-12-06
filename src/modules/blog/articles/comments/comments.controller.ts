@@ -15,7 +15,7 @@ import { CommentsService } from './comments.service';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtPayloadRequestDto } from '../../../auth/dto/jwt-payload-request.dto';
-import { extractUserIdFromRequest } from '../../../../helpers/extract-request-user-id';
+import { extractUserIdFromRequest } from '../../../../common/helpers/extract-request-user-id';
 import { BlogArticleIdParamsDto } from '../dto/common-articles.dto';
 import {
     BlogArticleCommentArrayContentResponseDto,
@@ -23,7 +23,7 @@ import {
     BlogArticleCommentIdParamsDto,
     BlogArticleCommentResponseDto,
 } from './dto/common-comments.dto';
-import { LOG_CONTEXT } from '../../../../constants/log';
+import { LOG_CONTEXT } from '../../../../common/constants';
 
 @Controller('/')
 @ApiTags('blog/articles/comments')

@@ -10,7 +10,7 @@ generator client {
 
 generator nestjsDto {
   provider                        = "prisma-generator-nestjs-dto"
-  output                          = "../src/postgres/generated-types"
+  output                          = "../src/common/database/postgres/generated-types"
   classValidation                 = "true"
   fileNamingStyle                 = "kebab"
   prettier                        = "true"

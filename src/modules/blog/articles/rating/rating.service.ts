@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../../providers/prisma/prisma.service';
+import { PrismaService } from '../../../../common/providers';
 import { ArticleRatingResponseDto, BlogArticleRatingBodyDto } from './dto/common-rating.dto';
 import { RatingGateway } from './rating.gateway';
-import { LOG_CONTEXT } from '../../../../constants/log';
+import { LOG_CONTEXT } from '../../../../common/constants';
 
 @Injectable()
 export class RatingService {

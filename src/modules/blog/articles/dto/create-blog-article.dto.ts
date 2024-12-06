@@ -1,5 +1,5 @@
 import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
-import { IsObjectOf } from '../../../../helpers/decorators/is-object-of';
+import { IsObjectOf } from '../../../../common/decorators/dto';
 
 export class CreateBlogArticleBodyContentDto {
     @IsNotEmpty()

@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
-import { getAllChildren } from './helpers/swagger/get-all-children';
+import { getAllChildren } from './common/swagger/helpers/get-all-children';
 import { routes } from './routes';
 
 async function bootstrap() {

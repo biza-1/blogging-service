@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { PrismaService } from '../../providers/prisma/prisma.service';
+import { PrismaService } from '../../common/providers';
 import { JwtService } from '@nestjs/jwt';
 
 jest.mock('bcryptjs', () => ({

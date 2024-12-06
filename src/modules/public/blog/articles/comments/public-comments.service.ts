@@ -4,7 +4,7 @@ import {
     PublicArticleCommentsResponseDto,
     PublicArticleCommentsResponseDtoContent,
 } from './dto/common-public-comments.dto';
-import { PrismaService } from '../../../../../providers/prisma/prisma.service';
+import { PrismaService } from '../../../../../common/providers';
 
 @Injectable()
 export class PublicCommentsService {

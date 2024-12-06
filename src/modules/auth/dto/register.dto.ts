@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { PickType } from '@nestjs/swagger';
-import { UserUser } from '../../../postgres/types/user-user/entities';
+import { UserUser } from '../../../common/database/postgres/types/user-user/entities';
 
 export class RegisterUserBodyDto {
     @IsString()

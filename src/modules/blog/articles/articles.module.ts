@@ -1,7 +1,7 @@
-import { Module } from '../../../helpers/decorators/module';
+import { Module } from '../../../common/decorators/module';
 import { ArticlesService } from './articles.service';
 import { ArticlesController } from './articles.controller';
-import { PrismaService } from '../../../providers/prisma/prisma.service';
+import { PrismaService } from '../../../common/providers';
 import { CommentsModule } from './comments/comments.module';
 import { RatingModule } from './rating/rating.module';
 

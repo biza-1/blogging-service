@@ -3,8 +3,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { AppResolver } from './app.resolver';
 import { ConfigModule } from '@nestjs/config';
-import { configNamespaces } from './config';
-import { validate } from './config/validation';
+import { configNamespaces } from './common/config';
+import { validateConfig } from './common/config/validation/config.validation';
 import { Global, Module } from '@nestjs/common';
 import { ModulesModule } from './modules/modules.module';
 
@@ -20,7 +20,7 @@ import { ModulesModule } from './modules/modules.module';
             csrfPrevention: false,
             context: ({ req }) => ({ headers: req.headers }),
         }),
-        ConfigModule.forRoot({ isGlobal: true, load: configNamespaces, validate }),
+        ConfigModule.forRoot({ isGlobal: true, load: configNamespaces, validate: validateConfig }),
     ],
     providers: [AppResolver],
 })

@@ -2,9 +2,8 @@ import { Type } from '@nestjs/common';
 import { MODULE_PATH } from '@nestjs/common/constants';
 import Module from 'module';
 import { ModulesModule } from './modules/modules.module';
-import { isDefined } from './helpers/validators/is-defined';
-import { isEmpty } from './helpers/validators/is-empty';
-import { Routes } from './helpers/swagger/swagger-types';
+import { isDefined, isEmpty } from './common/validators';
+import { Routes } from './common/swagger/types/swagger.types';
 
 const pathJoin = (path1: string, path2: string): string => {
     if (isEmpty(path2)) {

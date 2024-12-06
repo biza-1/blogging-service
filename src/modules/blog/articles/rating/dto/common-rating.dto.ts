@@ -1,6 +1,6 @@
 import { IsIn, IsInt } from 'class-validator';
 import { PickType } from '@nestjs/swagger';
-import { BlogArticleRating } from '../../../../../postgres/types/blog-article-rating/entities';
+import { BlogArticleRating } from '../../../../../common/database/postgres/types/blog-article-rating/entities';
 
 export class BlogArticleRatingBodyDto {
     @IsInt()

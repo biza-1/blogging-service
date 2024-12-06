@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../providers/prisma/prisma.service';
+import { PrismaService } from '../../../common/providers';
 import { CreateBlogArticleBodyDto } from './dto/create-blog-article.dto';
 import { UpdateBlogArticleBodyDto } from './dto/update-blog-article.dto';
-import { isDefined } from '../../../helpers/validators/is-defined';
+import { isDefined } from '../../../common/validators';
 import {
     BlogArticleArrayContentResponseDto,
     BlogArticleResponseDto,

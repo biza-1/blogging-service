@@ -1,10 +1,9 @@
 import { PickType } from '@nestjs/swagger';
-import { IsObjectOf } from '../../../../../../helpers/decorators/is-object-of';
+import { IsArrayOf, IsObjectOf } from '../../../../../../common/decorators/dto';
 import { IsOptional } from 'class-validator';
-import { UserUser } from '../../../../../../postgres/types/user-user/entities';
-import { BlogArticleCommentContent } from '../../../../../../postgres/types/blog-article-comment-content/entities';
-import { BlogArticleComment } from '../../../../../../postgres/types/blog-article-comment/entities';
-import { IsArrayOf } from '../../../../../../helpers/decorators/is-array-of';
+import { UserUser } from '../../../../../../common/database/postgres/types/user-user/entities';
+import { BlogArticleCommentContent } from '../../../../../../common/database/postgres/types/blog-article-comment-content/entities';
+import { BlogArticleComment } from '../../../../../../common/database/postgres/types/blog-article-comment/entities';
 
 export class BlogArticleResponseDtoUser extends PickType(UserUser, ['firstName', 'lastName']) {}
 

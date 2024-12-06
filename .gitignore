@@ -59,4 +59,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 prisma/migrations/
 
 # Prisma generated types
-src/postgres/generated-types
+src/common/database/postgres/generated-types

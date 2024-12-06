@@ -17,13 +17,13 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateBlogArticleBodyDto } from './dto/create-blog-article.dto';
 import { UpdateBlogArticleBodyDto } from './dto/update-blog-article.dto';
 import { JwtPayloadRequestDto } from '../../auth/dto/jwt-payload-request.dto';
-import { extractUserIdFromRequest } from '../../../helpers/extract-request-user-id';
+import { extractUserIdFromRequest } from '../../../common/helpers/extract-request-user-id';
 import {
     BlogArticleArrayContentResponseDto,
     BlogArticleIdParamsDto,
     BlogArticleResponseDto,
 } from './dto/common-articles.dto';
-import { LOG_CONTEXT } from '../../../constants/log';
+import { LOG_CONTEXT } from '../../../common/constants';
 
 @Controller('/')
 @ApiTags('blog/articles')

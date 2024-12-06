@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterUserBodyDto, RegisterUserResponseDto } from './dto/register.dto';
 import { LoginUserBodyDto, LoginUserResultDto } from './dto/login.dto';
-import { LOG_CONTEXT } from '../../constants/log';
+import { LOG_CONTEXT } from '../../common/constants';
 
 @Controller('/')
 @ApiTags('auth')

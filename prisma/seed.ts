@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { LOG_CONTEXT } from '../src/constants/log';
+import { LOG_CONTEXT } from '../src/common/constants';
 
 const prisma = new PrismaClient();
 
@@ -78,7 +78,7 @@ async function main() {
 
 main()
     .catch(e => {
-        console.error(LOG_CONTEXT.PRISMA_SEED ,e);
+        console.error(LOG_CONTEXT.PRISMA_SEED, e);
     })
     .finally(async () => {
         await prisma.$disconnect();

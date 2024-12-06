@@ -1,10 +1,9 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 import { OmitType, PickType } from '@nestjs/swagger';
-import { BlogArticle } from '../../../../postgres/types/blog-article/entities';
-import { BlogArticleContent } from '../../../../postgres/types/blog-article-content/entities';
-import { IsObjectOf } from '../../../../helpers/decorators/is-object-of';
+import { BlogArticle } from '../../../../common/database/postgres/types/blog-article/entities';
+import { BlogArticleContent } from '../../../../common/database/postgres/types/blog-article-content/entities';
+import { IsArrayOf, IsObjectOf } from '../../../../common/decorators/dto';
 import { BlogArticleCommentBodyContentDto } from '../comments/dto/common-comments.dto';
-import { IsArrayOf } from '../../../../helpers/decorators/is-array-of';
 
 export class BlogArticleIdParamsDto {
     @IsString()

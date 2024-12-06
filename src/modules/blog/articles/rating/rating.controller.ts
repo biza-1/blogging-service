@@ -12,13 +12,13 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { JwtPayloadRequestDto } from '../../../auth/dto/jwt-payload-request.dto';
-import { extractUserIdFromRequest } from '../../../../helpers/extract-request-user-id';
+import { extractUserIdFromRequest } from '../../../../common/helpers/extract-request-user-id';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BlogArticleIdParamsDto } from '../dto/common-articles.dto';
 import { ArticleRatingResponseDto, BlogArticleRatingBodyDto } from './dto/common-rating.dto';
 import { RatingService } from './rating.service';
 import { IpAndJwtPayloadRequestDto } from '../../../auth/dto/ip-and-jwt-payload-request.dto';
-import { extractIpAddressFromRequest } from '../../../../helpers/extract-request-ip-address';
+import { extractIpAddressFromRequest } from '../../../../common/helpers/extract-request-ip-address';
 
 @Controller('/')
 @ApiTags('blog/articles/user/rating')

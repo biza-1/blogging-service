@@ -1,4 +1,4 @@
-import { Module } from '../../../helpers/decorators/module';
+import { Module } from '../../../common/decorators/module';
 import { PublicArticlesModule } from './articles/public-articles.module';
 
 @Module({
