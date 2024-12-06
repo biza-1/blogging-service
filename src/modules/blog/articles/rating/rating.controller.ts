@@ -7,18 +7,14 @@ import {
     HttpStatus,
     Param,
     Post,
-    Request,
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
-import { JwtPayloadRequestDto } from '../../../auth/dto/jwt-payload-request.dto';
-import { extractUserIdFromRequest } from '../../../../common/helpers/extract-request-user-id';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BlogArticleIdParamsDto } from '../dto/common-articles.dto';
 import { ArticleRatingResponseDto, BlogArticleRatingBodyDto } from './dto/common-rating.dto';
 import { RatingService } from './rating.service';
-import { IpAndJwtPayloadRequestDto } from '../../../auth/dto/ip-and-jwt-payload-request.dto';
-import { extractIpAddressFromRequest } from '../../../../common/helpers/extract-request-ip-address';
+import { CurrentUserId, IpAddress } from '../../../../common/decorators/request';
 
 @Controller('/')
 @ApiTags('blog/articles/user/rating')
@@ -32,12 +28,9 @@ export class RatingController {
     async create(
         @Param() params: BlogArticleIdParamsDto,
         @Body() body: BlogArticleRatingBodyDto,
-        @Request() req: IpAndJwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
+        @IpAddress() ipAddress: string,
     ): Promise<ArticleRatingResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
-        const ipAddress = extractIpAddressFromRequest(req);
-
         return this.ratingService.create(userId, params.articleId, ipAddress, body);
     }
 
@@ -45,10 +38,8 @@ export class RatingController {
     @ApiOperation({ summary: 'Get a blog article current user rating' })
     async findAll(
         @Param() params: BlogArticleIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<ArticleRatingResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         return this.ratingService.findOne(userId, params.articleId);
     }
 
@@ -72,12 +63,7 @@ export class RatingController {
 
     @Delete('')
     @ApiOperation({ summary: 'Delete a blog article rating' })
-    async remove(
-        @Param() params: BlogArticleIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
-    ): Promise<void> {
-        const userId = extractUserIdFromRequest(req);
-
+    async remove(@Param() params: BlogArticleIdParamsDto, @CurrentUserId() userId: string): Promise<void> {
         const success = await this.ratingService.delete(userId, params.articleId);
 
         if (!success) {

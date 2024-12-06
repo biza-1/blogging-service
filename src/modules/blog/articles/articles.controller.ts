@@ -8,7 +8,6 @@ import {
     Param,
     Post,
     Put,
-    Request,
     UseGuards,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
@@ -16,14 +15,13 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateBlogArticleBodyDto } from './dto/create-blog-article.dto';
 import { UpdateBlogArticleBodyDto } from './dto/update-blog-article.dto';
-import { JwtPayloadRequestDto } from '../../auth/dto/jwt-payload-request.dto';
-import { extractUserIdFromRequest } from '../../../common/helpers/extract-request-user-id';
 import {
     BlogArticleArrayContentResponseDto,
     BlogArticleIdParamsDto,
     BlogArticleResponseDto,
 } from './dto/common-articles.dto';
 import { LOG_CONTEXT } from '../../../common/constants';
+import { CurrentUserId } from '../../../common/decorators/request';
 
 @Controller('/')
 @ApiTags('blog/articles')
@@ -36,18 +34,14 @@ export class ArticlesController {
     @ApiOperation({ summary: 'Create a new blog article' })
     async create(
         @Body() body: CreateBlogArticleBodyDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         return this.articlesService.create(userId, body);
     }
 
     @Get()
     @ApiOperation({ summary: 'Get all blog articles' })
-    async findAll(@Request() req: JwtPayloadRequestDto): Promise<BlogArticleResponseDto[]> {
-        const userId = extractUserIdFromRequest(req);
-
+    async findAll(@CurrentUserId() userId: string): Promise<BlogArticleResponseDto[]> {
         return this.articlesService.findAll(userId);
     }
 
@@ -55,10 +49,8 @@ export class ArticlesController {
     @ApiOperation({ summary: 'Get a single blog article' })
     async findOne(
         @Param() params: BlogArticleIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         const article = await this.articlesService.findOne(userId, params.articleId);
 
         if (!article) {
@@ -72,10 +64,8 @@ export class ArticlesController {
     @ApiOperation({ summary: 'Get a single blog article history' })
     async findOneHistory(
         @Param() params: BlogArticleIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleArrayContentResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         const article = await this.articlesService.findOneHistory(userId, params.articleId);
 
         if (!article) {
@@ -90,10 +80,8 @@ export class ArticlesController {
     async update(
         @Param() params: BlogArticleIdParamsDto,
         @Body() body: UpdateBlogArticleBodyDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         try {
             const article = await this.articlesService.update(userId, params.articleId, body);
 
@@ -111,12 +99,7 @@ export class ArticlesController {
 
     @Delete(':articleId')
     @ApiOperation({ summary: 'Delete a blog article' })
-    async remove(
-        @Param() params: BlogArticleIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
-    ): Promise<void> {
-        const userId = extractUserIdFromRequest(req);
-
+    async remove(@Param() params: BlogArticleIdParamsDto, @CurrentUserId() userId: string): Promise<void> {
         const success = await this.articlesService.softDelete(userId, params.articleId);
 
         if (!success) {

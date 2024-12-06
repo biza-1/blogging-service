@@ -8,14 +8,11 @@ import {
     Param,
     Post,
     Put,
-    Request,
     UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtPayloadRequestDto } from '../../../auth/dto/jwt-payload-request.dto';
-import { extractUserIdFromRequest } from '../../../../common/helpers/extract-request-user-id';
 import { BlogArticleIdParamsDto } from '../dto/common-articles.dto';
 import {
     BlogArticleCommentArrayContentResponseDto,
@@ -24,6 +21,7 @@ import {
     BlogArticleCommentResponseDto,
 } from './dto/common-comments.dto';
 import { LOG_CONTEXT } from '../../../../common/constants';
+import { CurrentUserId } from '../../../../common/decorators/request';
 
 @Controller('/')
 @ApiTags('blog/articles/comments')
@@ -37,10 +35,8 @@ export class CommentsController {
     async create(
         @Param() params: BlogArticleIdParamsDto,
         @Body() body: BlogArticleCommentBodyDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleCommentResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         return this.commentsService.create(userId, params.articleId, body);
     }
 
@@ -48,10 +44,8 @@ export class CommentsController {
     @ApiOperation({ summary: 'Get all blog article current user comments' })
     async findAll(
         @Param() params: BlogArticleIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleCommentResponseDto[]> {
-        const userId = extractUserIdFromRequest(req);
-
         return this.commentsService.findAll(userId, params.articleId);
     }
 
@@ -59,10 +53,8 @@ export class CommentsController {
     @ApiOperation({ summary: 'Get a single blog article comment' })
     async findOne(
         @Param() params: BlogArticleCommentIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleCommentResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         const articleComment = await this.commentsService.findOne(
             userId,
             params.articleId,
@@ -80,10 +72,8 @@ export class CommentsController {
     @ApiOperation({ summary: 'Get a single blog article comment history' })
     async findOneHistory(
         @Param() params: BlogArticleCommentIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleCommentArrayContentResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         const articleComment = await this.commentsService.findOneHistory(
             userId,
             params.articleId,
@@ -102,10 +92,8 @@ export class CommentsController {
     async update(
         @Param() params: BlogArticleCommentIdParamsDto,
         @Body() body: BlogArticleCommentBodyDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<BlogArticleCommentResponseDto> {
-        const userId = extractUserIdFromRequest(req);
-
         try {
             const articleComment = await this.commentsService.update(
                 userId,
@@ -130,10 +118,8 @@ export class CommentsController {
     @ApiOperation({ summary: 'Delete a blog article comment' })
     async remove(
         @Param() params: BlogArticleCommentIdParamsDto,
-        @Request() req: JwtPayloadRequestDto,
+        @CurrentUserId() userId: string,
     ): Promise<void> {
-        const userId = extractUserIdFromRequest(req);
-
         const success = await this.commentsService.softDelete(
             userId,
             params.articleId,
