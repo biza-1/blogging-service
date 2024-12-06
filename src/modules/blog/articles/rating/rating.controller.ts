@@ -24,14 +24,14 @@ export class RatingController {
     constructor(private readonly ratingService: RatingService) {}
 
     @Post()
-    @ApiOperation({ summary: 'Create or update blog article rating' })
-    async create(
+    @ApiOperation({ summary: 'Upsert blog article rating' })
+    async upsert(
         @Param() params: BlogArticleIdParamsDto,
         @Body() body: BlogArticleRatingBodyDto,
         @CurrentUserId() userId: string,
         @IpAddress() ipAddress: string,
     ): Promise<ArticleRatingResponseDto> {
-        return this.ratingService.create(userId, params.articleId, ipAddress, body);
+        return this.ratingService.upsert(userId, params.articleId, ipAddress, body);
     }
 
     @Get()
@@ -42,24 +42,6 @@ export class RatingController {
     ): Promise<ArticleRatingResponseDto> {
         return this.ratingService.findOne(userId, params.articleId);
     }
-
-    // @Put('')
-    // @ApiOperation({ summary: 'Update a blog article rating' })
-    // async update(
-    //     @Param() params: BlogArticleIdParamsDto,
-    //     @Body() body: BlogArticleRatingBodyDto,
-    //     @Request() req: JwtPayloadRequestDto,
-    // ): Promise<ArticleRatingResponseDto> {
-    //     const userId = extractUserIdFromRequest(req);
-    //
-    //     const article = await this.ratingService.update(userId, params.articleId, body);
-    //
-    //     if (!article) {
-    //         throw new HttpException('Article rating not found', HttpStatus.NOT_FOUND);
-    //     }
-    //
-    //     return article;
-    // }
 
     @Delete('')
     @ApiOperation({ summary: 'Delete a blog article rating' })

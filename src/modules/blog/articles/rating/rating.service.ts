@@ -11,7 +11,7 @@ export class RatingService {
         private ratingGateway: RatingGateway,
     ) {}
 
-    async create(
+    async upsert(
         userId: string,
         articleId: string,
         ipAddress: string,
@@ -77,30 +77,6 @@ export class RatingService {
 
         this.ratingGateway.emitRatingChange(articleId, newRating);
     }
-
-    // async update(
-    //     userId: string,
-    //     articleId: string,
-    //     body: BlogArticleRatingBodyDto,
-    // ): Promise<ArticleRatingResponseDto | null> {
-    //     const { rating } = body;
-    //
-    //
-    //     const articleRating = await this.prisma.blogArticleRating.update({
-    //         where: { articleId_userId: { articleId, userId } },
-    //         data: { rating },
-    //         select: {
-    //             articleId: true,
-    //             userId: true,
-    //             rating: true,
-    //         },
-    //     });
-    //
-    //     // emit changes for websocket
-    //     this.ratingGateway.emitRatingChange(articleId);
-    //
-    //     return articleRating;
-    // }
 
     async delete(userId: string, articleId: string): Promise<boolean> {
         try {
