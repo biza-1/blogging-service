@@ -5,7 +5,6 @@ export class UserUserDto {
     username: string;
     firstName: string;
     lastName: string;
-    passwordSalt: Buffer;
     passwordHash: Buffer;
     email: string;
     emailVerified: boolean;

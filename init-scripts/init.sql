@@ -5,7 +5,6 @@ CREATE TABLE "user.user"
     "username"       TEXT         NOT NULL,
     "first_name"     TEXT         NOT NULL,
     "last_name"      TEXT         NOT NULL,
-    "password_salt"  BYTEA        NOT NULL,
     "password_hash"  BYTEA        NOT NULL,
     "email"          TEXT         NOT NULL,
     "email_verified" BOOLEAN      NOT NULL,
@@ -111,14 +110,13 @@ ALTER TABLE "blog.article_rating"
     ADD CONSTRAINT "blog_article_rating_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user.user" ("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- Seed Data
-INSERT INTO "user.user" (user_id, username, first_name, last_name, password_salt, password_hash, email, email_verified,
+INSERT INTO "user.user" (user_id, username, first_name, last_name, password_hash, email, email_verified,
                          active, created_at)
 VALUES ('ee04dc69-b206-49f0-af72-d7bb3afe8a33',
         'username',
         'John',
         'Doe',
-        '$2a$10$Q0har2PsuDPQoojMec6kSO',
-        '$2a$10$Q0har2PsuDPQoojMec6kSOZUu.x9lGt8NLmwMgGuPM4V0LUrKdNRC',
+        '$2a$10$TX6hFKdH6ya1HxDBPnalZujKQ3uLy57Oeb0qO2O3Ndnxv3uKu6lgy',
         'john.doe@example.com',
         TRUE,
         TRUE,

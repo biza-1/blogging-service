@@ -11,8 +11,6 @@ export class UpdateUserUserDto {
     @IsString()
     lastName?: string;
     @IsOptional()
-    passwordSalt?: Buffer;
-    @IsOptional()
     passwordHash?: Buffer;
     @IsOptional()
     @IsString()

@@ -11,8 +11,6 @@ export class CreateUserUserDto {
     @IsString()
     lastName: string;
     @IsNotEmpty()
-    passwordSalt: Buffer;
-    @IsNotEmpty()
     passwordHash: Buffer;
     @IsNotEmpty()
     @IsString()

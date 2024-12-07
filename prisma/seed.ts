@@ -10,8 +10,7 @@ async function main() {
             username: 'username',
             firstName: 'John',
             lastName: 'Doe',
-            passwordSalt: Buffer.from('$2a$10$Q0har2PsuDPQoojMec6kSO'),
-            passwordHash: Buffer.from('$2a$10$Q0har2PsuDPQoojMec6kSOZUu.x9lGt8NLmwMgGuPM4V0LUrKdNRC'), // password is string
+            passwordHash: Buffer.from('$2a$10$TX6hFKdH6ya1HxDBPnalZujKQ3uLy57Oeb0qO2O3Ndnxv3uKu6lgy'), // password === "string"
             email: 'john.doe@example.com',
             emailVerified: true,
             active: true,

@@ -23,7 +23,6 @@ model UserUser {
   username      String   @unique
   firstName     String   @map("first_name")
   lastName      String   @map("last_name")
-  passwordSalt  Bytes    @map("password_salt")
   passwordHash  Bytes    @map("password_hash")
   email         String   @unique
   emailVerified Boolean  @map("email_verified")
