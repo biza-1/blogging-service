@@ -2,6 +2,7 @@ import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { LOG_CONTEXT, WEBSOCKET_EVENT_NAME, WEBSOCKET_NAMESPACE } from '../../../../common/constants';
 import { OnModuleInit } from '@nestjs/common';
+import { isUuid } from '../../../../common/validators';
 
 @WebSocketGateway({ namespace: WEBSOCKET_NAMESPACE.ARTICLE_RATING })
 export class RatingGateway implements OnModuleInit {
@@ -18,7 +19,7 @@ export class RatingGateway implements OnModuleInit {
             console.log(LOG_CONTEXT.RATING_GATEWAY, `Client connected: ${socket.id}`);
 
             socket.on(WEBSOCKET_EVENT_NAME.JOIN_ARTICLE, (articleId: string) => {
-                if (!this.isValidArticleId(articleId)) {
+                if (!isUuid(articleId)) {
                     console.log(
                         LOG_CONTEXT.RATING_GATEWAY,
                         `Client ${socket.id} sent incorrect data: ${articleId}`,
@@ -33,7 +34,7 @@ export class RatingGateway implements OnModuleInit {
             });
 
             socket.on(WEBSOCKET_EVENT_NAME.LEAVE_ARTICLE, (articleId: string) => {
-                if (!this.isValidArticleId(articleId)) {
+                if (!isUuid(articleId)) {
                     console.log(
                         LOG_CONTEXT.RATING_GATEWAY,
                         `Client ${socket.id} sent incorrect data: ${articleId}`,
@@ -74,9 +75,5 @@ export class RatingGateway implements OnModuleInit {
             .emit(WEBSOCKET_EVENT_NAME.ARTICLE_RATING_UPDATED, { articleId, rating: newRating });
 
         console.log(LOG_CONTEXT.RATING_GATEWAY, `Emitted new rating for article ${articleId}: ${newRating}`);
-    }
-
-    private isValidArticleId(articleId: string): boolean {
-        return typeof articleId === 'string' && articleId.trim().length > 0;
     }
 }

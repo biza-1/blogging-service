@@ -3,6 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { LOG_CONTEXT, WEBSOCKET_EVENT_NAME, WEBSOCKET_NAMESPACE } from '../../../../common/constants';
 import { OnModuleInit } from '@nestjs/common';
 import { BlogArticleCommentResponseDto } from './dto/common-comments.dto';
+import { isUuid } from '../../../../common/validators';
 
 @WebSocketGateway({ namespace: WEBSOCKET_NAMESPACE.ARTICLE_COMMENTS })
 export class CommentsGateway implements OnModuleInit {
@@ -19,28 +20,32 @@ export class CommentsGateway implements OnModuleInit {
             console.log(LOG_CONTEXT.COMMENTS_GATEWAY, `Client connected: ${socket.id}`);
 
             socket.on(WEBSOCKET_EVENT_NAME.JOIN_ARTICLE, (articleId: string) => {
-                if (!this.isValidArticleId(articleId)) {
+                if (!isUuid(articleId)) {
                     console.log(
                         LOG_CONTEXT.COMMENTS_GATEWAY,
                         `Client ${socket.id} sent incorrect data: ${articleId}`,
                     );
+
                     return;
                 }
 
                 console.log(LOG_CONTEXT.COMMENTS_GATEWAY, `Client ${socket.id} joined article ${articleId}`);
+
                 socket.join(articleId);
             });
 
             socket.on(WEBSOCKET_EVENT_NAME.LEAVE_ARTICLE, (articleId: string) => {
-                if (!this.isValidArticleId(articleId)) {
+                if (!isUuid(articleId)) {
                     console.log(
                         LOG_CONTEXT.COMMENTS_GATEWAY,
                         `Client ${socket.id} sent incorrect data: ${articleId}`,
                     );
+
                     return;
                 }
 
                 console.log(LOG_CONTEXT.COMMENTS_GATEWAY, `Client ${socket.id} left article ${articleId}`);
+
                 socket.leave(articleId);
             });
 
@@ -84,9 +89,5 @@ export class CommentsGateway implements OnModuleInit {
             LOG_CONTEXT.COMMENTS_GATEWAY,
             `Emitted deleted comment for article ${articleId}: ${commentId}`,
         );
-    }
-
-    private isValidArticleId(articleId: string): boolean {
-        return typeof articleId === 'string' && articleId.trim().length > 0;
     }
 }
