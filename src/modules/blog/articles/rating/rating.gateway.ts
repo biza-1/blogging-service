@@ -3,6 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { LOG_CONTEXT, WEBSOCKET_EVENT_NAME, WEBSOCKET_NAMESPACE } from '../../../../common/constants';
 import { OnModuleInit } from '@nestjs/common';
 import { isUuid } from '../../../../common/validators';
+import { AckResponse } from '../../../../common/gateways/interfaces';
 
 @WebSocketGateway({ namespace: WEBSOCKET_NAMESPACE.ARTICLE_RATING })
 export class RatingGateway implements OnModuleInit {
@@ -18,35 +19,56 @@ export class RatingGateway implements OnModuleInit {
         this.server.on(WEBSOCKET_EVENT_NAME.CONNECTION, (socket: Socket) => {
             console.log(LOG_CONTEXT.RATING_GATEWAY, `Client connected: ${socket.id}`);
 
-            socket.on(WEBSOCKET_EVENT_NAME.JOIN_ARTICLE, (articleId: string) => {
-                if (!isUuid(articleId)) {
+            socket.on(
+                WEBSOCKET_EVENT_NAME.JOIN_ARTICLE,
+                (articleId: string, ack: (response: AckResponse) => void) => {
+                    if (!isUuid(articleId)) {
+                        console.log(
+                            LOG_CONTEXT.RATING_GATEWAY,
+                            `Client ${socket.id} sent incorrect data: ${articleId}`,
+                        );
+
+                        // Send an error acknowledgment back to the client
+                        ack?.({ success: false, message: 'Invalid article ID' });
+
+                        return;
+                    }
+
                     console.log(
                         LOG_CONTEXT.RATING_GATEWAY,
-                        `Client ${socket.id} sent incorrect data: ${articleId}`,
+                        `Client ${socket.id} joined article ${articleId}`,
                     );
 
-                    return;
-                }
+                    socket.join(articleId);
 
-                console.log(LOG_CONTEXT.RATING_GATEWAY, `Client ${socket.id} joined article ${articleId}`);
+                    // Send a success acknowledgment back to the client
+                    ack?.({ success: true, message: `Joined article: ${articleId}` });
+                },
+            );
 
-                socket.join(articleId);
-            });
+            socket.on(
+                WEBSOCKET_EVENT_NAME.LEAVE_ARTICLE,
+                (articleId: string, ack: (response: AckResponse) => void) => {
+                    if (!isUuid(articleId)) {
+                        console.log(
+                            LOG_CONTEXT.RATING_GATEWAY,
+                            `Client ${socket.id} sent incorrect data: ${articleId}`,
+                        );
 
-            socket.on(WEBSOCKET_EVENT_NAME.LEAVE_ARTICLE, (articleId: string) => {
-                if (!isUuid(articleId)) {
-                    console.log(
-                        LOG_CONTEXT.RATING_GATEWAY,
-                        `Client ${socket.id} sent incorrect data: ${articleId}`,
-                    );
+                        // Send an error acknowledgment back to the client
+                        ack?.({ success: false, message: 'Invalid article ID' });
 
-                    return;
-                }
+                        return;
+                    }
 
-                console.log(LOG_CONTEXT.RATING_GATEWAY, `Client ${socket.id} left article ${articleId}`);
+                    console.log(LOG_CONTEXT.RATING_GATEWAY, `Client ${socket.id} left article ${articleId}`);
 
-                socket.leave(articleId);
-            });
+                    socket.leave(articleId);
+
+                    // Send a success acknowledgment back to the client
+                    ack?.({ success: true, message: `Left article: ${articleId}` });
+                },
+            );
 
             socket.on(WEBSOCKET_EVENT_NAME.DISCONNECT, () => {
                 console.log(LOG_CONTEXT.RATING_GATEWAY, `Client disconnected: ${socket.id}`);
